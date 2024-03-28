@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hauna Hela nini Sacco</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(39, 36, 9);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px;
+    }
+
+    .card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+    }
+    .card p {
+        margin-bottom: 0;
+        color: #666;
+    }
+    .header{
+        color: white;
+    }
+    .card-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgb(231, 231, 231);
+    }
+    .request{
+        display: flex;
+        justify-content: space-between;
+    }
+    button{
+        padding: 10px;
+        border: 2px solid goldenrod;
+        border-radius: 5px;
+        color: black;
+        
+    }
+    button:focus{
+        border: 2px solid grey;
+    }
+    button:hover{
+        background-color: rgb(219, 219, 219);
+    }
+    form{
+        margin:auto;
+        max-width: 300px;
+    }
+    label{
+        font-weight: bold;
+    }
+
+    form {
+      margin: 0 auto;
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px; /* Set border radius to 10px for round corners */
+      background-color: #f9f9f9;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"],input[type="password"] {
+      padding: 5px; /* Adjust padding as needed */
+      border-radius: 5px; /* Set border radius for text inputs */
+      border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="header">Hauna Hela nini Sacco</h1>
+    </div>
+    
+    <div class="dashboard">
+        <% if(msg) { %>
+            <p style="color: #17b978;" class="text-center"><%=msg%></p>
+      <%   } %>
+      <% if(err) { %>
+          <p style="color: #ff304f;" class="text-center"><%=err%></p>
+      <%   } %>
+        <div class="card">
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label class="form-control-label">Member Number</label>
+                    <input name="number" type="text" class="form-control" required>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="form-control-label">Pin</label>
+                    <input name="pass" type="password" class="form-control" required>
+                </div>
+            
+                <div class="loginbttm">
+                    <div class="col-lg-6 login-btm login-text">
+                        <!-- Error Message -->
+                    </div>
+                    <div class="col-lg-7 login-btm login-button">
+                        <button type="submit" class="center btn btn-outline-warning">LOGIN</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+</html>
+
+

@@ -1,0 +1,27 @@
+const express =  require('express');
+const path    =  require('path');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+require('dotenv').config()
+ 
+const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+//own module
+const router = require('./routes');
+const oneDay = 1000 * 60 * 60 * 24;
+
+app.use(session({
+  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+  saveUninitialized:true,
+  cookie: { maxAge: oneDay },
+  resave: false 
+}));
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use(router);
+
+app.listen(process.env.PORT, () => console.log("Server is Running..."+process.env.PORT));

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hauna Hela nini Sacco</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(39, 36, 9);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px;
+    }
+    .card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+    }
+    .card p {
+        margin-bottom: 0;
+        color: #666;
+    }
+    .header{
+        color: white;
+    }
+    .card-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgb(231, 231, 231);
+    }
+    .request{
+        display: flex;
+        justify-content: space-between;
+    }
+    button{
+        padding: 10px;
+        border: 2px solid goldenrod;
+        border-radius: 5px;
+        color: black;
+        
+    }
+    button:focus{
+        border: 2px solid grey;
+    }
+    button:hover{
+        background-color: rgb(219, 219, 219);
+    }
+    .stats{
+        border-top: 1px solid rgb(238, 238, 238);
+    }
+    .data{
+        color: green;
+    }.info{
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgb(233, 233, 233);
+    }.review-header{
+       border-bottom: 1px solid rgb(230, 230, 230);
+       padding-bottom: 10px;
+    }
+   .request{
+    border-bottom: 1px solid rgb(230, 230, 230);
+    padding-top: 20px;
+   }
+
+    
+
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="header">Hauna Hela nini Sacco</h1>
+    </div>
+    <br>
+    <div class="dashboard">
+        <div class="card">
+            <div class="review-header">
+                <p>Request for a guaranter</p>
+                
+            </div>
+            <br>
+            
+              
+          
+             
+            
+            <div class="requests">
+              <% if(members.length) { %>
+                  <% for(i=0;i<members.length;i++){  %>
+                    <form action="/add" method="POST">
+                      <label for="amount">Enter Loan Amount</label><br><br>
+                      <input type="text" id="amount" name="amount"><br><br>
+                      <div class="request">
+                       
+                          <p><%=members[i].name%></p>
+                          <p>ksh.<%=members[i].savings%></p>
+                          <p><%=members[i].guaratees%></p>
+                          <p><%=members[i].repayment%></p>
+                          <input hidden name="phone" value="<%=members[i].phone%>">
+                          <input hidden name="name" value="<%=members[i].name%>">
+                          <input hidden name="id" value="<%=members[i].id%>">
+                          
+                          <button type="submit">Request member</button>
+                          
+                      </div>
+                    </form>
+                      <br>
+                      <%}%>
+                      <%}else{%>
+                          <p>No requests</p>
+                      <%}%>
+              
+          </div>
+        
+ 
+        </div>
+
+    </div>
+</div>
+
+</body>
+
+</html>
+

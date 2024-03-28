@@ -1,0 +1,29 @@
+{
+  "name": "guarantor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/firestore": "^4.5.0",
+    "africastalking": "^0.6.6",
+    "body-parser": "^1.19.0",
+    "dotenv": "^16.4.4",
+    "easyinvoice": "^2.3.3",
+    "ejs": "^3.1.2",
+    "express": "^4.17.3",
+    "express-session": "^1.17.1",
+    "firebase": "^10.9.0",
+    "firebase-admin": "^12.0.0",
+    "formidable": "^1.2.2",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.3",
+    "path": "^0.12.7",
+    "uuid": "^9.0.0"
+  }
+}

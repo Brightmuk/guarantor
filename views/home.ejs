@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hauna Hela nini Sacco</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(39, 36, 9);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    .dashboard-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+    }
+    .card p {
+        margin-bottom: 0;
+        color: #666;
+    }
+    .header{
+        color: white;
+    }
+    .card-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgb(231, 231, 231);
+    }
+    .request{
+        display: flex;
+        justify-content: space-between;
+    }
+    button{
+        padding: 10px;
+        border: 2px solid goldenrod;
+        border-radius: 5px;
+        color: black;
+        
+    }
+    button:focus{
+        border: 2px solid grey;
+    }
+    button:hover{
+        background-color: rgb(219, 219, 219);
+    }
+    .sectioned{
+        display: flex;
+        justify-content: space-around;
+    }
+    .section{
+        text-align: center;
+    
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 class="header">Hauna Hela nini Sacco</h1>
+        <p><%=user.name%></p>
+    </div>
+    <br>
+    <div class="dashboard">
+        <div class="card">
+            <p>Current Savings</p>
+            <h1><%=user.savings%></h1>
+        </div>
+        <div class="card">
+            <p>Current Loans</p>
+            <h1><%=user.loans%></h1>
+        </div>
+        <div class="card">
+           <br>
+            <div class="sectioned">
+                <div class="section">
+                        <h2><%=user.guarantees%></h2>
+                     <p>Guarantees</p>
+                </div>
+                <div class="section">
+                    <h2><%=user.repayment%>%</h2>
+                     <p>Loan Repayment</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="container">
+
+    <br>
+    <div class="dashboard-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>Guarantee requests</h3>
+                <h2>3</h2>
+            </div>
+            <div class="requests">
+                <% if(requests.length) { %>
+                    <% for(i=0;i<requests.length;i++){  %>
+                        <div class="request">
+                           
+                            <p><%=requests[i].requester%></p>
+                            <p>ksh.<%=requests[i].amount%></p>
+                            <p>Mar 21, 2024</p>
+                            <form action="/review" method="POST">
+                                <input hidden name="id" value="<%=requests[i].id%>">
+                            <button >Review</button>
+                            </form>
+                        </div>
+                        <br>
+                        <%}%>
+                        <%}else{%>
+                            <p>No requests</p>
+                        <%}%>
+                
+            </div>
+            
+        </div>
+        <div class="card">
+            
+            <div class="card-header">
+                <h3>Your guaranter requests</h3>
+                <a href="/add">
+
+               <button>Get Guarantor</button>
+               </a>
+            </div>
+            <div class="requests">
+                <% if(user_requests.length) { %>
+                    <% for(i=0;i<user_requests.length;i++){  %>
+                        <div class="request">
+                           
+                            <p><%=user_requests[i].to.name%></p>
+                            <p>ksh.<%=user_requests[i].amount%></p>
+                            <p><%=user_requests[i].status%></p>
+                            <p>Mar 21, 2024</p>
+                            <form action="/review" method="POST">
+                                <input hidden name="id" value="<%=user_requests[i].id%>">
+                            <button >View</button>
+                            </form>
+                        </div>
+                        <br>
+                        <%}%>
+                        <%}else{%>
+                            <p>No requests</p>
+                        <%}%>
+                
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+
+</html>
