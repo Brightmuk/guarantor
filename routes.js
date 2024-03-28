@@ -6,6 +6,9 @@ const router = express.Router();
 const adminControler = require('./controllers/admin');
 const userControler = require('./controllers/user');
 
+router.route('/quick/login')
+   .post(userControler.postQuickLogin)  
+
 router.route('/login')
    .get(userControler.getLogin) 
    .post(userControler.postLogin)  

@@ -12,6 +12,25 @@ exports.getLogin = (req, res, next) => {
     res.render('login', { msg: [], err: [] });
  }
 
+
+exports.postQuickLogin = async(req, res, next) => {
+    
+    var number = req.body.number;
+    var id = req.body.id;
+
+    const userDoc = await admin.firestore().doc('members/'+number).get();
+    
+    if (userDoc.exists) {
+        const doc = await admin.firestore().doc('requests/'+id).get();
+     
+        return res.render('review',{request:doc.data(), id: doc.id});
+     }
+     else {
+        res.render('quick_login', { user: "", msg: [], err: ["Please Check Your information again"] });
+     }
+
+ }
+
 exports.postLogin = async(req, res, next) => {
     
     var number = req.body.number;
@@ -128,10 +147,16 @@ exports.postAdd = async(req, res, next) => {
 
 exports.getReview = async(req, res, next) => {
     var id = req.params.id
-    
-    const doc = await admin.firestore().doc('requests/'+id).get();
+    if(req.session.user==undefined){
+        return res.render('quick_login',{id: id,msg: [], err: []});
+
+    }else{
+        const doc = await admin.firestore().doc('requests/'+id).get();
      
-    return res.render('review',{request:doc.data(), id: doc.id});
+        return res.render('review',{request:doc.data(), id: doc.id});
+    }
+    
+
  
  }
 exports.postApprove = async(req, res, next) => {
