@@ -21,8 +21,9 @@ exports.postQuickLogin = async(req, res, next) => {
     const userDoc = await admin.firestore().doc('members/'+number).get();
     
     if (userDoc.exists) {
+        req.session.user = ({ id: userDoc.id, ...userDoc.data() });
         const doc = await admin.firestore().doc('requests/'+id).get();
-     
+        
         return res.render('review',{request:doc.data(), id: doc.id});
      }
      else {
