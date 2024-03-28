@@ -81,6 +81,7 @@ exports.postAdd = async(req, res, next) => {
     var amount = req.body.amount;
     var currentUser = req.session.user;
 
+    var resourceId;
 
     await admin.firestore()
     
@@ -103,7 +104,10 @@ exports.postAdd = async(req, res, next) => {
                currentUser.savings >= 1000000 ? "above 1M" : "Unknown"
 
         },
-    }).then((v)=>console.log('Request sent'));
+    }).then(function(docRef) {
+        resourceId = docRef.id;
+        console.log("Document written with ID: ", docRef.id);
+    })
 
     const snapshot = await admin.firestore()
     .collection('requests')
@@ -116,14 +120,14 @@ exports.postAdd = async(req, res, next) => {
     .where('requester','==',req.session.user.name)
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    sendSMS(`Hello ${name}, ${req.session.user.name} from Hauna Hela nini sacco is requesting you to become their guarnter. Visit this link to review their request.`,phone)
+    sendSMS(`Hello ${name}, ${req.session.user.name} from Hauna Hela nini sacco is requesting you to become their guarnter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}`,phone)
 
     res.render('home', {requests: data,'msg':'Success',user: req.session.user,user_requests:data2 });
  }
 
 
-exports.postReview = async(req, res, next) => {
-    var id = req.body.id;
+exports.getReview = async(req, res, next) => {
+    var id = req.params.id
     
     const doc = await admin.firestore().doc('requests/'+id).get();
      

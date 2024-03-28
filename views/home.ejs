@@ -133,9 +133,10 @@
                             <p><%=requests[i].requester%></p>
                             <p>ksh.<%=requests[i].amount%></p>
                             <p>Mar 21, 2024</p>
-                            <form action="/review" method="POST">
-                                <input hidden name="id" value="<%=requests[i].id%>">
+                            <a href="/review/<%=requests[i].id%>">
+                               
                             <button >Review</button>
+                            </a>
                             </form>
                         </div>
                         <br>
