@@ -5,8 +5,13 @@ var serviceAccount = require("../key.json");
 const { Timestamp, FieldValue } = require('firebase-admin/firestore');
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({
+      projectId:process.env.PROJECT_ID,
+      clientEmail:process.env.CLIENT_EMAIL,
+      privateKey:process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  })
 });
+
 
 exports.getLogin = (req, res, next) => {
     res.render('login', { msg: [], err: [] });

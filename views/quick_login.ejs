@@ -125,6 +125,7 @@
       <%   } %>
         <div class="card">
             <form action="/quick/login" method="POST">
+                <input hidden name="id" value="<%=id%>">
                 <div class="form-group">
                     <label class="form-control-label">Member Number</label>
                     <input name="number" type="text" class="form-control" required>
@@ -134,7 +135,7 @@
                     <label class="form-control-label">Pin</label>
                     <input name="pass" type="password" class="form-control" required>
                 </div>
-                <input name="id" hidden value="<%=id%>" class="form-control" hidden>
+                
             
                 <div class="loginbttm">
                     <div class="col-lg-6 login-btm login-text">
