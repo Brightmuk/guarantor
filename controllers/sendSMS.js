@@ -1,7 +1,7 @@
 const AfricasTalking = require('africastalking');
 
 const africastalking = AfricasTalking({
-    apiKey: 'de55acffcb839721e773c240c8f84b5ebc5e392ecfd771b087421edf811e57fe', 
+    apiKey: process.env.AT_API_KEY, 
     username: 'hhn'
   });
   
