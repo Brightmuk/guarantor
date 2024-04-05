@@ -1,8 +1,8 @@
 const AfricasTalking = require('africastalking');
 
 const africastalking = AfricasTalking({
-    apiKey: '4a4f6ad794cb7209e0d6e02658c7d9351d280b8cd1b8685bcbdb386515ea3c51', 
-    username: 'sakagariapp'
+    apiKey: 'de55acffcb839721e773c240c8f84b5ebc5e392ecfd771b087421edf811e57fe', 
+    username: 'hhn'
   });
   
   module.exports = async function sendSMS(message,receiver) {
@@ -11,7 +11,7 @@ const africastalking = AfricasTalking({
     const result=await africastalking.SMS.send({
       to: receiver, 
       message: message,
-      from: ''
+      from: '' 
     });
     console.log(result);
   } catch(ex) {

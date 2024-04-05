@@ -1,16 +1,15 @@
 var mysql = require('mysql');
 const sendSMS = require('./sendSMS');
 var admin = require("firebase-admin");
-var serviceAccount = require("../key.json");
 const { Timestamp, FieldValue } = require('firebase-admin/firestore');
 
 admin.initializeApp({
   credential: admin.credential.cert({
-      projectId:process.env.PROJECT_ID,
+      projectId:process.env.PROJECT_ID, 
       clientEmail:process.env.CLIENT_EMAIL,
       privateKey:process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
   })
-});
+});  
 
 
 exports.getLogin = (req, res, next) => {
@@ -91,10 +90,12 @@ exports.getHome = async(req, res, next) => {
 }
 
 exports.getAdd = async(req, res, next) => { 
-    const snapshot = await admin.firestore()
+    const snapshot = await admin.firestore() 
     .collection('members').where('name','!=',req.session.user.name)
     .get();
-    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(),savingsRange:doc.data().savings < 400 ? "below 400k" : 
+    doc.data().savings >= 400000 && doc.data().savings < 1000000 ? "400k-1M" :
+    doc.data().savings >= 1000000 ? "above 1M" : "Unknown" }));
 
     return res.render('add',{'members': data});
  
