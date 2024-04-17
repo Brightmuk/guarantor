@@ -192,14 +192,13 @@ exports.postApprove = async(req, res, next) => {
 
  exports.ussdCallback = async(req,res, next) => {
      try{
-        const sessionId = re.body.sessionId;
+        const sessionId = req.body.sessionId;
         const serviceCode = req.body.serviceCode;
         const phoneNumber = req.body.phoneNumber;
         const text = request.body.text;
     
-        res.send({'type':'success','sessionId':sessionId})
+        res.send('CON Success!')
      }catch(e){
-        res.send({'type':'error','error':e.toString()})
+        res.send('END Error!')
      }
-
  }
