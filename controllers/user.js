@@ -2,7 +2,7 @@ var mysql = require('mysql');
 const sendSMS = require('./sendSMS');
 var admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require('firebase-admin/firestore');
-
+ 
 admin.initializeApp({
   credential: admin.credential.cert({
       projectId:process.env.PROJECT_ID, 
@@ -146,10 +146,11 @@ exports.postAdd = async(req, res, next) => {
     .where('requester','==',req.session.user.name)
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    sendSMS(`Hello ${name}, ${req.session.user.name} from Hauna Hela nini sacco is requesting you to become their guarnter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}`,phone)
+    sendSMS(`Hello ${name}, ${req.session.user.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}`,phone)
 
     res.render('home', {requests: data,'msg':'Success',user: req.session.user,user_requests:data2 });
  }
+ 
 
 
 exports.getReview = async(req, res, next) => {
@@ -189,3 +190,16 @@ exports.postApprove = async(req, res, next) => {
   
  }
 
+ exports.ussdCallback = async(req,res, next) => {
+     try{
+        const sessionId = re.body.sessionId;
+        const serviceCode = req.body.serviceCode;
+        const phoneNumber = req.body.phoneNumber;
+        const text = request.body.text;
+    
+        res.send({'type':'success','sessionId':sessionId})
+     }catch(e){
+        res.send({'type':'error','error':e.toString()})
+     }
+
+ }

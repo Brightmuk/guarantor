@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-
 const router = express.Router();
 
 const adminControler = require('./controllers/admin');
@@ -23,4 +22,7 @@ router.route('/approve')
 router.route('/add') 
       .get(userControler.getAdd)  
       .post(userControler.postAdd)
+router.route('/ussd')
+      .post(userControler.ussdCallback)
+
 module.exports = router;
