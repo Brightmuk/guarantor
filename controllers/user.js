@@ -195,10 +195,71 @@ exports.postApprove = async(req, res, next) => {
         const sessionId = req.body.sessionId;
         const serviceCode = req.body.serviceCode;
         const phoneNumber = req.body.phoneNumber;
-        const text = request.body.text;
-    
-        res.send('CON Success!')
+        const input = req.body.text;
+        console.log("Current input is: ",input)
+        
+        var response = '';
+        if(input==''){
+            const query = await admin.firestore().collection('members').where('phone','==',phoneNumber).get();
+            if(query.docs.length<1){
+                response = 'END You are not registered to the service!\nPlease visit https://guarantorske.com';
+                 
+            }else{
+                var userDoc = query.docs[0].data();
+
+                response = `CON  Hi  ${userDoc.name},  welcome to Sacco Gaurantor Service \n\n`
+                response+="Please select an option to continue\n"
+                response+="1. Login\n"
+                response+="2. Contact support";
+            }
+
+        }else if(input=='1'){
+
+            response="CON Please enter your pin";
+        }else if(input=='2'){
+
+            response="END Call 0791670106 for help or visit our website https://guarantorske.com"
+        }else if(/^1\*\d{4}$/.test(input)){
+
+            const query = await admin.firestore().collection('members').where('phone','==',phoneNumber).where('pin','==',input.slice(-4)).get();
+            if(query.docs.length<1){
+                response = 'END You have input the wrong pin, please try again!';
+                 
+            }else{
+                var userDoc = query.docs[0].data();
+                response = `CON ${userDoc.name}\nCurrent Savings: ${userDoc.savings < 400 ? "below 400k" : 
+                userDoc.savings >= 400000 && userDoc.savings < 1000000 ? "400k-1M" :
+                userDoc.savings >= 1000000 ? "above 1M" : "Unknown" }`
+
+                response += `\nGuarantees: ${userDoc.guarantees}\nLoan repayment rate: ${userDoc.repayment},\nCurrent Loans: ${userDoc.loans}\n\n `
+                response+="Please select an option to proceeed:\n"
+
+                response+="1. Get guarantors\n"
+                response+="2. View guarantor requests";
+
+            }
+        }else if(/^1\*\d{4}\*1$/.test(input)){
+                response="CON Getting guarantor"
+        }else if(/^1\*\d{4}\*2$/.test(input)){
+            response="CON Viewing requests"
+        }else{
+            response="CON Please Select a valid option "
+        }
+        console.log("Sending response: ",response)
+        res.send(response);
+
      }catch(e){
-        res.send('END Error!')
+         console.log(e.toString())
+        res.send('END Sorry, there was an error!\n Please try again later.')
      }
  }
+
+
+// Define your getLogin function
+exports.getLogin = (req, res, next) => {
+  res.render('login', { msg: [], err: [] });
+};
+
+
+
+
