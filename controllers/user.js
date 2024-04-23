@@ -2,7 +2,9 @@ var mysql = require('mysql');
 const sendSMS = require('./sendSMS');
 var admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require('firebase-admin/firestore');
- 
+
+const liveUrl="https://guarantor-85ri.onrender.com/review/";
+
 admin.initializeApp({
   credential: admin.credential.cert({
       projectId:process.env.PROJECT_ID, 
@@ -159,7 +161,7 @@ exports.postAdd = async(req, res, next) => {
     .where('requester','==',req.session.user.name)
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    sendSMS(`Hello ${name}, ${req.session.user.name} from Sacco Guarantor Service is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}\nor dial *384*001009#`,phone)
+    sendSMS(`Hello ${name}, ${req.session.user.name} from Sacco Guarantor Service is requesting you to become their guaranter. Visit this link to review their request.\n${liveUrl}${resourceId}\nor dial *384*001009#\n`,phone)
 
     res.render('home', {requests: data,'msg':'Success',user: req.session.user,user_requests:data2 });
  }
@@ -352,7 +354,7 @@ exports.postApprove = async(req, res, next) => {
                 })
     
                 if(receiverDoc!=undefined&&senderDoc!=undefined&&resourceId!=undefined){
-                    sendSMS(`Hello ${receiverDoc.name}, ${senderDoc.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}\nor dial *384*001009#`,receiverDoc.phone)
+                    sendSMS(`Hello ${receiverDoc.name}, ${senderDoc.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\n${liveUrl}${resourceId}\nor dial *384*001009#\n`,receiverDoc.phone)
                     response="END Request sent to the member"
                 }else{
                     response="END Sorry, there was an error!"
