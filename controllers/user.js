@@ -146,7 +146,7 @@ exports.postAdd = async(req, res, next) => {
     .where('requester','==',req.session.user.name)
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    sendSMS(`Hello ${name}, ${req.session.user.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}`,phone)
+    sendSMS(`Hello ${name}, ${req.session.user.name} from Sacco Guarantor Service is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}\nor dial *384*001009#`,phone)
 
     res.render('home', {requests: data,'msg':'Success',user: req.session.user,user_requests:data2 });
  }
@@ -184,7 +184,7 @@ exports.postApprove = async(req, res, next) => {
     .where('requester','==',req.session.user.name)
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    sendSMS(`Hello ${receiver}, ${req.session.user.name} from Hauna Hela nini sacco has accepted your request to become their guaranter.`,phone)
+    sendSMS(`Hello ${receiver}, ${req.session.user.name} from Sacco Guarantor Service has accepted your request to become their guaranter.`,phone)
 
     res.render('home', {requests: data,'msg':'Success' ,user: req.session.user,user_requests:data2}); 
   
@@ -282,47 +282,52 @@ exports.postApprove = async(req, res, next) => {
             
             
         }else if(/^1\*\d{4}\*1\*\d{3}\*1$/.test(input)){
-            var memberNo = input.slice(-5,-2)
+            try{
+                var memberNo = input.slice(-5,-2)
 
-            const query = await admin.firestore().collection('members').where('phone','==',phoneNumber).get();
-            var senderDoc = query.docs[0].data();
-
-            const snapshot = await admin.firestore().doc('members/'+memberNo).get();
-            var receiverDoc = snapshot.data();
-
-            var resourceId;
-            await admin.firestore()
+                const query = await admin.firestore().collection('members').where('phone','==',phoneNumber).get();
+                var senderDoc = query.docs[0].data();
+    
+                const snapshot = await admin.firestore().doc('members/'+memberNo).get();
+                var receiverDoc = snapshot.data();
+    
+                var resourceId;
+                await admin.firestore()
+                
+                .collection('requests')
+                .add({
+                    'amount':'10000000',
+                    'to':{ 
+                        'name':receiverDoc.name,
+                        'id':snapshot.id,
+                        'phone':receiverDoc.phone
+                    },
+                    'date':Timestamp.now(),
+                    'requester': senderDoc.name,
+                    'status':'review',
+                    'portfolio':{ 
+                        'guarantees':senderDoc.guarantees,
+                        'repaymentRate':senderDoc.repayment,
+                        'savingsRange': senderDoc.savings < 400000 ? "below 400k" : 
+                           currentUser.savings >= 400000 && currentUser.savings < 1000000 ? "400k-1M" :
+                           currentUser.savings >= 1000000 ? "above 1M" : "Unknown"
             
-            .collection('requests')
-            .add({
-                'amount':'10000000',
-                'to':{ 
-                    'name':receiverDoc.name,
-                    'id':snapshot.id,
-                    'phone':receiverDoc.phone
-                },
-                'date':Timestamp.now(),
-                'requester': senderDoc.name,
-                'status':'review',
-                'portfolio':{ 
-                    'guarantees':senderDoc.guarantees,
-                    'repaymentRate':senderDoc.repayment,
-                    'savingsRange': senderDoc.savings < 400000 ? "below 400k" : 
-                       currentUser.savings >= 400000 && currentUser.savings < 1000000 ? "400k-1M" :
-                       currentUser.savings >= 1000000 ? "above 1M" : "Unknown"
-        
-                },
-            }).then(function(docRef) {
-                resourceId = docRef.id;
-                console.log("Document written with ID: ", docRef.id);
-            })
-
-            if(receiverDoc!=undefined&&senderDoc!=undefined&&resourceId!=undefined){
-                sendSMS(`Hello ${receiverDoc.name}, ${senderDoc.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}`,receiverDoc.phone)
-                response="END Request sent to the member"
-            }else{
+                    },
+                }).then(function(docRef) {
+                    resourceId = docRef.id;
+                    console.log("Document written with ID: ", docRef.id);
+                })
+    
+                if(receiverDoc!=undefined&&senderDoc!=undefined&&resourceId!=undefined){
+                    sendSMS(`Hello ${receiverDoc.name}, ${senderDoc.name} from Hauna Hela nini sacco is requesting you to become their guaranter. Visit this link to review their request.\nhttps://guarantor-85ri.onrender.com/review/${resourceId}\nor dial *384*001009#`,receiverDoc.phone)
+                    response="END Request sent to the member"
+                }else{
+                    response="END Sorry, there was an error!"
+                }
+            }catch(e){
                 response="END Sorry, there was an error!"
             }
+
            
             }else{
             response="END Please Select a valid option"

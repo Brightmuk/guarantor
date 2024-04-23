@@ -2,7 +2,7 @@ const AfricasTalking = require('africastalking');
 
 const africastalking = AfricasTalking({
     apiKey: process.env.AT_API_KEY, 
-    username: 'hhn'
+    username: 'guarantor'
   });
   
   module.exports = async function sendSMS(message,receiver) {
