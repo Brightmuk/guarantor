@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hauna Hela nini Sacco</title>
+<title>Sacco Guarantor Service</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -12,13 +12,14 @@
         background-color: #f4f4f4;
     }
     .container {
-        max-width: 1200px;
+        width: 80%;
         margin: 20px auto;
         padding: 20px;
         border-radius: 10px;
         background-color: rgb(39, 36, 9);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .header {
         text-align: center;
         margin-bottom: 20px;
@@ -82,12 +83,25 @@
         text-align: center;
     
     }
+    @media screen and (max-width: 800px) {
+    .dashboard,.dashboard-2{
+        display: block;
+    }
+    .card{
+        margin-bottom: 5px;
+    }
+    .request{
+        display: block;
+ 
+    }
+
+    }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1 class="header">Hauna Hela nini Sacco</h1>
+        <h1 class="header">Sacco Guarantor Service</h1>
         <p><%=user.name%></p>
     </div>
     <br>
@@ -130,7 +144,7 @@
                     <% for(i=0;i<requests.length;i++){  %>
                         <div class="request">
                            
-                            <p><%=requests[i].requester%></p>
+                            <p><%=requests[i].requester.name%></p>
                             <p>ksh.<%=requests[i].amount%></p>
                             <p>Mar 21, 2024</p>
                             <a href="/review/<%=requests[i].id%>">
@@ -139,6 +153,7 @@
                             </a>
                             </form>
                         </div>
+
                         <br>
                         <%}%>
                         <%}else{%>
@@ -166,11 +181,12 @@
                             <p>ksh.<%=user_requests[i].amount%></p>
                             <p><%=user_requests[i].status%></p>
                             <p>Mar 21, 2024</p>
-                            <form action="/review" method="POST">
-                                <input hidden name="id" value="<%=user_requests[i].id%>">
+                            <a href="/view/<%=user_requests[i].id%>">
+                                
                             <button >View</button>
-                            </form>
+                            </a>
                         </div>
+ 
                         <br>
                         <%}%>
                         <%}else{%>

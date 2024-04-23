@@ -12,7 +12,7 @@
         background-color: #f4f4f4;
     }
     .container {
-        max-width: 1200px;
+        width: 80%;
         margin: 20px auto;
         padding: 20px;
         border-radius: 10px;
@@ -89,7 +89,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1 class="header">Hauna Hela nini Sacco</h1>
+        <h1 class="header">Sacco Guarantor Service</h1>
     </div>
     <br>
     <div class="dashboard">
@@ -99,7 +99,7 @@
                 
                 <form  action="/approve" method="POST">
                     <input hidden name="phone" value="<%=request.to.phone%>">
-                    <input hidden name="reciever" value="<%=request.requester%>">
+                    <input hidden name="reciever" value="<%=request.requester.name%>">
                     <input hidden name="id" value="<%=id%>">
                 <button>Approve</button>
                 </form>

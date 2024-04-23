@@ -12,7 +12,7 @@
         background-color: #f4f4f4;
     }
     .container {
-        max-width: 1200px;
+        width: 80%;
         margin: 20px auto;
         padding: 20px;
         border-radius: 10px;
@@ -89,23 +89,17 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1 class="header">Hauna Hela nini Sacco</h1>
+        <h1 class="header">Sacco Guarantor Service</h1>
     </div>
     <br>
     <div class="dashboard">
         <div class="card">
             <div class="review-header">
-                <p>Review this request</p>
-                
-                <form  action="/approve" method="POST">
-                    <input hidden name="phone" value="<%=request.to.phone%>">
-                    <input hidden name="reciever" value="<%=request.requester%>">
-                    <input hidden name="id" value="<%=id%>">
-                <button>Approve</button>
-                </form>
+                <p>You made this request</p>
+
             </div>
           
-            <h4>You are requesting <%=request.requester%> to be your guarantor</h4>
+            <h4>You are requesting <%=request.requester.name%> to be your guarantor</h4>
             <h3>Loan amount: <span class="data"><%=request.amount%></span></h3>
             <div class="stats">
                 <div class="info">
@@ -121,6 +115,10 @@
                 <div class="info">
                     <h3>Savings Range: <span class="data"><%=request.portfolio.savingsRange%></span></h3>
                     <p>Their current savings in the sacco</p>
+                </div>
+                <div class="info">
+                    <h3>Status <span class="data"><%=request.status%></span></h3>
+                    <p></p>
                 </div>
                 
             </div>

@@ -53,7 +53,7 @@ exports.postLogin = async(req, res, next) => {
         
         const snapshot2 = await admin.firestore()
         .collection('requests')
-        .where('requester','==',userDoc.data().name)
+        .where('requester.name','==',userDoc.data().name)
         .get();
         const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
@@ -78,11 +78,10 @@ exports.getHome = async(req, res, next) => {
 
         const snapshot2 = await admin.firestore()
         .collection('requests')
-        .where('requester','==',req.session.user.name)
+        .where('requester.name','==',req.session.user.name)
         .get();
         const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log(data2)
-        console.log(req.session.user.name)
+        
         
         res.render('home', {requests: data,user: req.session.user, user_requests:data2 });
     }
@@ -100,13 +99,23 @@ exports.getAdd = async(req, res, next) => {
     return res.render('add',{'members': data});
  
  }
+ exports.getView = async(req, res, next) => { 
+    var id = req.params.id
+
+    const snapshot = await admin.firestore().doc('requests/'+id).get();
+
+    const data = ({ id: snapshot.id, ...snapshot.data(),})
+
+    return res.render('view',{'request': data});
+ 
+ }
 exports.postAdd = async(req, res, next) => {
     var name = req.body.name;
     var phone = req.body.phone;
     var id = req.body.id;
     var amount = req.body.amount;
     var currentUser = req.session.user;
-
+    
     var resourceId;
 
     await admin.firestore()
@@ -120,7 +129,11 @@ exports.postAdd = async(req, res, next) => {
             'phone':phone
         },
         'date':Timestamp.now(),
-        'requester': req.session.user.name,
+        'requester': {
+            'name':req.session.user.name,
+            'id':currentUser.id
+        },
+       
         'status':'review',
         'portfolio':{ 
             'guarantees':currentUser.guarantees,
@@ -264,7 +277,24 @@ exports.postApprove = async(req, res, next) => {
             
 
         }else if(/^1\*\d{4}\*2$/.test(input)){
-            response="CON Viewing requests"
+            const snapshot = await admin.firestore()
+            .collection('requests')
+            .where('to.phone','==',phoneNumber)
+            .where('status','==','review')
+            .get();
+            const data = snapshot.docs.map(doc => doc.data());
+            response="CON Here are your guarantee requests"
+            for(var i=0;i<data.length;i++){
+                response+=`[${data[i].requester.id}] ${data[i].requester.name}
+           Loan Amount: ${data[i].amount}
+           Loan repayment rate: ${data[i].portfolio.repaymentRate}%  
+           Guarantees ${data[i].portfolio.guarantees} 
+           Savings: ${data[i].portfolio.savingsRange} 
+           Date: ${data[i].date.toDate().toLocaleString()}`
+                response+="\n\n"
+                
+            }
+            response="Enter member no to continue with approval/rejection"
         }else if(/^1\*\d{4}\*1\*\d{3}$/.test(input)){
             var memberNo = input.slice(-3)
             
@@ -303,7 +333,10 @@ exports.postApprove = async(req, res, next) => {
                         'phone':receiverDoc.phone
                     },
                     'date':Timestamp.now(),
-                    'requester': senderDoc.name,
+                    'requester': {
+                        'name':senderDoc.name,
+                        'id':query.docs[0].id
+                    },
                     'status':'review',
                     'portfolio':{ 
                         'guarantees':senderDoc.guarantees,
@@ -340,7 +373,6 @@ exports.postApprove = async(req, res, next) => {
         res.send('END Sorry, there was an error!\n Please try again later.')
      }
  }
-
 
 // Define your getLogin function
 exports.getLogin = (req, res, next) => {
