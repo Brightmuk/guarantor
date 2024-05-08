@@ -3,7 +3,7 @@ const sendSMS = require('./sendSMS');
 var admin = require("firebase-admin");
 const { Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const liveUrl="https://guarantor-85ri.onrender.com/review/";
+const liveUrl="https://506d-41-90-185-254.ngrok-free.app/review/";
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -133,10 +133,11 @@ exports.postAdd = async(req, res, next) => {
         'date':Timestamp.now(),
         'requester': {
             'name':req.session.user.name,
-            'id':currentUser.id
+            'id':currentUser.id,
+            'phone':req.session.user.phone,
         },
        
-        'status':'review',
+        'status':'review', 
         'portfolio':{ 
             'guarantees':currentUser.guarantees,
             'repaymentRate':currentUser.repayment,
@@ -200,6 +201,28 @@ exports.postApprove = async(req, res, next) => {
     .get();
     const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     sendSMS(`Hello ${receiver}, ${req.session.user.name} from Sacco Guarantor Service has accepted your request to become their guaranter.`,phone)
+
+    res.render('home', {requests: data,'msg':'Success' ,user: req.session.user,user_requests:data2}); 
+  
+ }
+ exports.postDecline = async(req, res, next) => {
+    var id = req.body.id
+    var receiver = req.body.receiver
+    var phone = req.body.phone
+
+    await admin.firestore().collection('requests').doc(id).update({'status':'declined'});
+
+    const snapshot = await admin.firestore().collection('requests')
+    .where('to.name','==',req.session.user.name)
+    .where('status','==','review').get();
+    const data = snapshot.docs.map(doc => doc.data()); 
+
+    const snapshot2 = await admin.firestore()
+    .collection('requests')
+    .where('requester','==',req.session.user.name)
+    .get();
+    const data2 = snapshot2.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    sendSMS(`Hello ${receiver}, ${req.session.user.name} from Sacco Guarantor Service has declined your request to become their guaranter.`,phone)
 
     res.render('home', {requests: data,'msg':'Success' ,user: req.session.user,user_requests:data2}); 
   
@@ -285,7 +308,7 @@ exports.postApprove = async(req, res, next) => {
             .where('status','==','review')
             .get();
             const data = snapshot.docs.map(doc => doc.data());
-            response="CON Here are your guarantee requests"
+            response="CON Here are your guarantee requests\n"
             for(var i=0;i<data.length;i++){
                 response+=`[${data[i].requester.id}] ${data[i].requester.name}
            Loan Amount: ${data[i].amount}
@@ -296,7 +319,7 @@ exports.postApprove = async(req, res, next) => {
                 response+="\n\n"
                 
             }
-            response="Enter member no to continue with approval/rejection"
+            response+="Enter member no to continue with approval/rejection"
         }else if(/^1\*\d{4}\*1\*\d{3}$/.test(input)){
             var memberNo = input.slice(-3)
             
@@ -313,7 +336,20 @@ exports.postApprove = async(req, res, next) => {
             }
             
             
-        }else if(/^1\*\d{4}\*1\*\d{3}\*1$/.test(input)){
+        }else if(/^1\*\d{4}\*2\*\d{3}$/.test(input)){
+            var memberNo = input.slice(-3)
+            
+            const query = await admin.firestore().collection('requests').where('requester.id','==',memberNo).get();
+            var request = query.docs[0].data();
+            if(request!=undefined){
+                response=`CON [${request.requester.memberNo}] ${request.requester.name} has requested you to guarantee them for a loan\n\n`
+                response+=`Loan repayment rate: ${request.portfolio.repaymentRate}%\nGuarantees ${request.portfolio.guarantees}`
+                response+=`\nSavings: ${request.portfolio.savingsRange}\n\n`
+                      
+                response+="1. Accept\n2. Reject"
+            }
+        }
+        else if(/^1\*\d{4}\*1\*\d{3}\*1$/.test(input)){
             try{
                 var memberNo = input.slice(-5,-2)
 
